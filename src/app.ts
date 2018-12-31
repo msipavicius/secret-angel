@@ -1,8 +1,10 @@
+import * as bodyParser from 'body-parser'
 import * as express from 'express'
 import { Game } from './game'
 import { Participant } from './participant'
 
 export const app = express()
+app.use(bodyParser.json())
 const PORT = 3000
 
 // temporary solution for storing the data
@@ -17,6 +19,14 @@ app.post('/games', (req, res) => {
     const game = new Game(participants)
     gameStorage.set(game.getId(), game)
     res.send(game.getId())
+})
+
+app.get('/games/:id', (req, res) => {
+    const game = gameStorage.get(req.params.id)
+    if (!game) {
+        throw Error(`Game with id "${req.params.id}" doesn't exist. Please provide existing id or create a new game.`)
+    }
+    res.send({participants: game.getParticipants()})
 })
 
 app.get('/games/:id/play', (req, res) => {
