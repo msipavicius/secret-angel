@@ -2,9 +2,15 @@ import { Participant } from './participant'
 import { Result, Round } from './round'
 
 export class Game {
-    private result?: Result
+    private static index = 0
 
-    constructor(private participants: Participant[]) {}
+    private result?: Result
+    private id: string
+
+    constructor(private participants: Participant[]) {
+        this.id = String(Game.index)
+        Game.index++
+    }
 
     play() {
         const round = new Round(this.participants)
@@ -18,5 +24,9 @@ export class Game {
 
     getResult() {
         return this.result
+    }
+
+    getId() {
+        return this.id
     }
 }
